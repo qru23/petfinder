@@ -11,7 +11,7 @@ export default function PushScript() {
     script.onload = (sdk: any) => {
       sdk.startInstall(
         {
-          "appId": "10065a7da65621e464f7cb95f4add16",
+          "appId": "10065abbb656242f9b235e84e953cef",
           "loadSettings": true
         }
       )
