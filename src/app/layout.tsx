@@ -4,8 +4,6 @@ import './globals.css'
 import { MantineProvider, createTheme } from '@mantine/core';
 import Header from './components/Header';
 import PageContainer from './components/PageContainer';
-import Script from 'next/script'
-
 import '@mantine/core/styles.css';
 import PushScript from './components/PushScript';
 
