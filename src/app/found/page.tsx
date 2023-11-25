@@ -19,9 +19,10 @@ export default function FoundPage() {
       <h1>Found</h1>
 
       <FormStyle>
-        <Input></Input>
-        <Camera
-          onTakePhoto={photoHandler}
+        <input 
+          type="file" 
+          accept="image/*" 
+          capture={true}
         />
       </FormStyle>
     </main>
