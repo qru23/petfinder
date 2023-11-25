@@ -1,21 +1,36 @@
 "use client"
 
-import { FileInput, TextInput } from '@mantine/core'
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Axios from 'axios'
 import { ButtonStyle } from '../components/Button'
 import dynamic from 'next/dynamic'
 import { LatLngLiteral } from 'leaflet'
+import { InputStyle } from '../styles/InputStyle'
+import { InputEvent } from '../types/events'
 
 const FormStyle = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 `
 
 const Map = dynamic(() => import('../components/Map'), {
   ssr: false,
 })
+
+const PhotoPreviewsContainerStyle = styled.div`
+  width: 100%;
+  height: 300px;
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: scroll;
+
+  img {
+    height: 100%;
+    object-fit: contain;
+  }
+`
 
 export default function LostPage() {
   const [name, setName] = useState<string>('')
@@ -23,6 +38,8 @@ export default function LostPage() {
   const [reward, setReward] = useState<string>('')
   const [coords, setCoords] = useState<LatLngLiteral | undefined>(undefined)
   const [files, setFiles] = useState<File[]>([])
+
+  const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
 
   const submitHandler = useCallback((e: FormEvent) => {
     e.preventDefault()
@@ -52,38 +69,63 @@ export default function LostPage() {
     console.log('submit', name, files)
   }, [name, phone, reward, coords, files])
 
+  useEffect(() => {
+    if (files.length === 0) return
+
+    const objectUrls = files.map(f => URL.createObjectURL(f))
+    setPhotoPreviews(objectUrls)
+
+    return () => objectUrls.forEach(o => URL.revokeObjectURL(o))
+  }, [files])
+
   return (
     <main>
-      <h1>Lost</h1>
-
-      <FormStyle 
-        onSubmit={submitHandler}
-      >
-        <TextInput
-          label="Pet name"
-          placeholder="Pet Name"
+      <FormStyle>
+        <InputStyle
           value={name}
-          onChange={e => setName(e.currentTarget.value)}
+          placeholder="Name"
+          onChange={(e: InputEvent)  => setName(e.currentTarget.value)}
         />
-        <TextInput 
-          label="Contact Number"
+
+        <InputStyle 
           value={phone}
-          onChange={e => setPhone(e.currentTarget.value)}
-        />
-        <TextInput
-          label="Reward"
-          value={reward}
-          onChange={e => setReward(e.currentTarget.value)}
-        />
-        <FileInput
-          label="Upload photo"
-          onChange={setFiles}
-          multiple
+          placeholder="Phone"
+          onChange={(e: InputEvent) => setPhone(e.currentTarget.value)}
         />
 
         <Map 
           onCoordinatesChange={setCoords}
         />
+
+        <InputStyle
+          value={reward}
+          placeholder="Reward"
+          onChange={(e: InputEvent) => setReward(e.currentTarget.value)}
+        />
+        
+        <InputStyle
+          type="file"
+          multiple={true}
+          onChange={(e: InputEvent) => {
+            if (e.currentTarget.files) {
+              setFiles(Array.from(e.currentTarget.files))
+            }
+          }}
+        />
+
+        {
+          photoPreviews.length > 0 &&
+          <PhotoPreviewsContainerStyle>
+          {
+            photoPreviews.map(photo => (
+              <img 
+                key={photo}
+                src={photo}
+              />
+            ))
+          }
+          </PhotoPreviewsContainerStyle>
+        }
 
         <ButtonStyle onClick={submitHandler}>Submit</ButtonStyle>
       </FormStyle>
