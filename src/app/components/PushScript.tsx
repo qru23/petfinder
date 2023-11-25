@@ -1,39 +1,29 @@
 "use client"
 
 import Script from "next/script"
+import { useEffect } from "react";
 
 export default function PushScript() {
-  return (
-    <div dangerouslySetInnerHTML={{
-      __html: `
-      <script id="script">
-        var s = document.createElement("script")
-        s.src = "https://notix.io/ent/current/enot.min.js"
-        s.onload = function (sdk) {
-          sdk.startInstall(
-            {
-              "appId": "10065a7da65621e464f7cb95f4add16",
-              "loadSettings": true
-            }
-          )
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://notix.io/ent/current/enot.min.js';
+    script.async = true;
+    script.onload = (sdk: any) => {
+      sdk.startInstall(
+        {
+          "appId": "10065a7da65621e464f7cb95f4add16",
+          "loadSettings": true
         }
-        document.head.append(s)
-      </script>
-      `
-    }}>
+      )
+    }
+    document.head.appendChild(script);
 
-    </div>
-    // <Script
-    //   src="https://notix.io/ent/current/enot.min.js"
-    //   onLoad={(sdk: any) => {
-    //     console.log(sdk)
-    //     sdk.startInstall(
-    //       {
-    //         "appId": "10065a7da65621e464f7cb95f4add16",
-    //         "loadSettings": true
-    //       }
-    //     )
-    //   }}
-    // />    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+  
+  return (
+    <></>   
   )
 }

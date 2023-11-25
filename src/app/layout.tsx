@@ -6,6 +6,8 @@ import Header from './components/Header';
 import PageContainer from './components/PageContainer';
 import '@mantine/core/styles.css';
 import PushScript from './components/PushScript';
+import dynamic from 'next/dynamic'
+import { useEffect } from 'react';
 
 const theme = createTheme({})
 
