@@ -233,7 +233,7 @@ const FoundPetOptionContainer = styled.div`
 `
 
 const CarouselContainerStyle = styled.div`
-  height: 500px;
+  /* height: 300px; */
   display: flex;
   overflow: hidden;
   border-radius: 1rem;
