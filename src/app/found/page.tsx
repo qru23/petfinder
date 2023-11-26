@@ -6,6 +6,8 @@ import Axios from 'axios'
 import { ButtonStyle } from '../components/Button'
 import { InputStyle } from '../styles/InputStyle'
 import { InputEvent } from '../types/events'
+import { Pet } from '../types/pet'
+import { Color, Paths } from '../consts'
 
 const FormStyle = styled.div`
   display: flex;
@@ -30,6 +32,8 @@ export default function FoundPage() {
 
   const [photoPreview, setPhotoPreview] = useState<string | undefined>('')
 
+  const [foundPets, setFoundPets] = useState<Pet[]>([])
+
   const submitHandler = useCallback((e: FormEvent) => {
     e.preventDefault()
 
@@ -47,11 +51,12 @@ export default function FoundPage() {
       formData.append('email', email)
 
       const { data } = await Axios.post(
-        'http://46.101.212.106:8888/found/', 
+        `${Paths.serverUrl}/found/`,
         formData
       )
 
       console.log('result', data)
+      setFoundPets(data)
     })();
 
     console.log('submit', name, phone, email, photo)
@@ -65,6 +70,39 @@ export default function FoundPage() {
 
     return () => URL.revokeObjectURL(objectUrl)
   }, [photo])
+
+  const selectPetHandler = useCallback((pet: Pet) => {
+    if (!photo) {
+      console.error('Photo is required')
+      return
+    }
+
+    ;(async () => {
+      const formData = new FormData()
+
+      formData.append('name', name)
+      formData.append('phone', phone)
+      formData.append('file', photo)
+      formData.append('email', email)
+      formData.append('pet_id', pet.pet_id)
+
+      const { data } = await Axios.post(
+        `${Paths.serverUrl}/confirm_by_finder/`,
+        formData
+      )
+
+      console.log('result', data)
+    })()
+  }, [name, phone, email, photo])
+
+  if (foundPets.length > 0) {
+    return (
+      <FoundPetList 
+        pets={foundPets}
+        onSelectPet={pet => selectPetHandler(pet)}
+      />
+    )
+  }
 
   return (
     <main>
@@ -113,4 +151,66 @@ export default function FoundPage() {
       </FormStyle>
     </main>
   ) 
+}
+
+const FoundPetListStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`
+
+function FoundPetList(
+  { pets, onSelectPet }: 
+  { pets: Pet[], onSelectPet: (pet: Pet) => void }
+) {
+  return (
+    <> 
+      <h2>We found some similar looking pets!</h2>
+      <FoundPetListStyle>
+      {
+        pets.map(pet => (
+          <FoundPetOption
+            key={pet.pet_id}
+            pet={pet}
+            onSelectPet={() => { onSelectPet(pet) }}
+          />
+        ))
+      }
+      </FoundPetListStyle>
+    </>
+  )
+}
+
+const FoundPetOptionContainer = styled.div`
+  background: ${Color.borders};
+  border-radius: 0.5rem;
+  color: white;
+  padding: 0.5rem;
+`
+
+function FoundPetOption(
+  { pet, onSelectPet }: 
+  { pet: Pet, onSelectPet: () => void }
+) {
+  return (
+    <FoundPetOptionContainer>
+      <h2>{ pet.pet_name }</h2>
+
+      <div>
+      {
+        pet.images.map(image => (
+          <img
+            src={`${Paths.serverUrl}${image.path}`}
+          />
+        ))
+      }
+      </div>
+
+      <ButtonStyle
+        onClick={onSelectPet}
+      >
+        Select {pet.pet_name}
+      </ButtonStyle>
+    </FoundPetOptionContainer>
+  )
 }

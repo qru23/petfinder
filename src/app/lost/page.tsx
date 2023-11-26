@@ -8,6 +8,8 @@ import dynamic from 'next/dynamic'
 import { LatLngLiteral } from 'leaflet'
 import { InputStyle } from '../styles/InputStyle'
 import { InputEvent } from '../types/events'
+import { Paths } from '../consts'
+import { FaCheck } from "react-icons/fa";
 
 const FormStyle = styled.div`
   display: flex;
@@ -33,13 +35,17 @@ const PhotoPreviewsContainerStyle = styled.div`
 `
 
 export default function LostPage() {
-  const [name, setName] = useState<string>('')
+  const [petName, setPetName] = useState<string>('')
+  const [ownerName, setOwnerName] = useState<string>('')
   const [phone, setPhone] = useState<string>('')
+  const [email, setEmail] = useState<string>('')
   const [reward, setReward] = useState<string>('')
   const [coords, setCoords] = useState<LatLngLiteral | undefined>(undefined)
   const [files, setFiles] = useState<File[]>([])
 
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
+
+  const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
 
   const submitHandler = useCallback((e: FormEvent) => {
     e.preventDefault()
@@ -47,7 +53,8 @@ export default function LostPage() {
     ;(async () => {
       const formData = new FormData()
 
-      formData.append('name', name)
+      formData.append('pet_name', petName)
+      formData.append('owner_name', ownerName)
       formData.append('phone', phone)
       formData.append('reward', reward)
 
@@ -58,16 +65,20 @@ export default function LostPage() {
 
       files.forEach(f => formData.append('files', f))
 
+      console.log('Submitting lost pet', petName)
       const { data } = await Axios.post(
-        'http://46.101.212.106:8888/embed/', 
+        `${Paths.serverUrl}/lost/`,
         formData
       )
 
-      console.log('result', data)
-    })();
+      if (!data.success) {
+        console.error('There was an error submitting lost pet')
+        return
+      }
 
-    console.log('submit', name, files)
-  }, [name, phone, reward, coords, files])
+      setSubmitSuccess(true)
+    })();
+  }, [petName, ownerName, phone, reward, coords, files])
 
   useEffect(() => {
     if (files.length === 0) return
@@ -78,19 +89,39 @@ export default function LostPage() {
     return () => objectUrls.forEach(o => URL.revokeObjectURL(o))
   }, [files])
 
+  if (submitSuccess) {
+    return (
+      <SubmitSuccessPage
+        petName={petName}
+      />
+    )
+  }
+
   return (
     <main>
       <FormStyle>
         <InputStyle
-          value={name}
-          placeholder="Name"
-          onChange={(e: InputEvent)  => setName(e.currentTarget.value)}
+          value={petName}
+          placeholder="Pet Name"
+          onChange={(e: InputEvent)  => setPetName(e.currentTarget.value)}
+        />
+
+        <InputStyle
+          value={ownerName}
+          placeholder="Owner Name"
+          onChange={(e: InputEvent)  => setOwnerName(e.currentTarget.value)}
         />
 
         <InputStyle 
           value={phone}
           placeholder="Phone"
           onChange={(e: InputEvent) => setPhone(e.currentTarget.value)}
+        />
+
+        <InputStyle 
+          value={email}
+          placeholder="Email"
+          onChange={(e: InputEvent) => setEmail(e.currentTarget.value)}
         />
 
         <Map 
@@ -131,4 +162,21 @@ export default function LostPage() {
       </FormStyle>
     </main>
   ) 
+}
+
+const SubmitSuccessPageContainer = styled.div`
+  
+`
+
+function SubmitSuccessPage(
+  { petName }: 
+  { petName: string }
+) {
+  return (
+    <SubmitSuccessPageContainer>
+      <FaCheck />
+
+      <h2>We will let you know as soon as someone finds {petName}! ❤️</h2>
+    </SubmitSuccessPageContainer>
+  )
 }
