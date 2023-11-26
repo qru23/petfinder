@@ -3,11 +3,14 @@
 import { FormEvent, SyntheticEvent, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Axios from 'axios'
-import { ButtonStyle } from '../components/Button'
-import { InputStyle } from '../styles/InputStyle'
-import { InputEvent } from '../types/events'
-import { Pet } from '../types/pet'
-import { Color, Paths } from '../consts'
+import { ButtonStyle } from '../../app/styles/ButtonStyle'
+import { InputStyle } from '../../app/styles/InputStyle'
+import { InputEvent } from '../../app/types/events'
+import { Pet } from '../../app/types/pet'
+import { Color, Paths } from '../../app/consts'
+import '@mantine/carousel/styles.css';
+import { Carousel } from '@mantine/carousel'
+import { FaCheck } from 'react-icons/fa'
 
 const FormStyle = styled.div`
   display: flex;
@@ -33,6 +36,7 @@ export default function FoundPage() {
   const [photoPreview, setPhotoPreview] = useState<string | undefined>('')
 
   const [foundPets, setFoundPets] = useState<Pet[]>([])
+  const [confirmedPet, setConfirmedPet] = useState<Pet | undefined>(undefined)
 
   const submitHandler = useCallback((e: FormEvent) => {
     e.preventDefault()
@@ -92,8 +96,17 @@ export default function FoundPage() {
       )
 
       console.log('result', data)
+      setConfirmedPet(pet)
     })()
   }, [name, phone, email, photo])
+
+  if (confirmedPet !== undefined) {
+    return (
+      <SubmitSuccessPage
+        petName={confirmedPet.pet_name}
+      />
+    )
+  }
 
   if (foundPets.length > 0) {
     return (
@@ -153,6 +166,17 @@ export default function FoundPage() {
   ) 
 }
 
+const FoundFoundWrapperStyle = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  & > h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+`
+
 const FoundPetListStyle = styled.div`
   display: flex;
   flex-direction: column;
@@ -164,7 +188,7 @@ function FoundPetList(
   { pets: Pet[], onSelectPet: (pet: Pet) => void }
 ) {
   return (
-    <> 
+    <FoundFoundWrapperStyle> 
       <h2>We found some similar looking pets!</h2>
       <FoundPetListStyle>
       {
@@ -177,7 +201,7 @@ function FoundPetList(
         ))
       }
       </FoundPetListStyle>
-    </>
+    </FoundFoundWrapperStyle>
   )
 }
 
@@ -186,6 +210,30 @@ const FoundPetOptionContainer = styled.div`
   border-radius: 0.5rem;
   color: white;
   padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+`
+
+const CarouselContainerStyle = styled.div`
+  height: 500px;
+  display: flex;
+  overflow: hidden;
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+`
+
+const CarouselImageStyle = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: top;
+`
+
+const FoundPetOptionTitle = styled.h2`
+  font-size: 2rem;
+  color: #111;
+  text-align: center;
+  margin-bottom: 1rem;
 `
 
 function FoundPetOption(
@@ -194,17 +242,28 @@ function FoundPetOption(
 ) {
   return (
     <FoundPetOptionContainer>
-      <h2>{ pet.pet_name }</h2>
+      <FoundPetOptionTitle>
+        { pet.pet_name }
+      </FoundPetOptionTitle>
 
-      <div>
-      {
-        pet.images.map(image => (
-          <img
-            src={`${Paths.serverUrl}${image.path}`}
-          />
-        ))
-      }
-      </div>
+      <CarouselContainerStyle>
+        <Carousel
+          loop={true}
+        >
+        {
+          pet.images.map(image => (
+            <Carousel.Slide
+              key={image.path}
+              className="overflow-hidden"
+            >
+              <CarouselImageStyle 
+                src={image.path}
+              />
+            </Carousel.Slide>
+          ))
+        }
+        </Carousel>
+      </CarouselContainerStyle>
 
       <ButtonStyle
         onClick={onSelectPet}
@@ -212,5 +271,30 @@ function FoundPetOption(
         Select {pet.pet_name}
       </ButtonStyle>
     </FoundPetOptionContainer>
+  )
+}
+
+const SubmitSuccessPageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+`
+
+function SubmitSuccessPage(
+  { petName }: 
+  { petName: string }
+) {
+  return (
+    <SubmitSuccessPageContainer>
+      <FaCheck 
+        size={150}
+        color={'#218f3c'}
+        className="mb-8"
+      />
+      <h2>Thank you for finding {petName}!</h2>
+      <h3>We will let their owner know as soon as possible!</h3>
+    </SubmitSuccessPageContainer>
   )
 }

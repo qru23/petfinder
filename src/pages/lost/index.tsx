@@ -3,12 +3,12 @@
 import { FormEvent, useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Axios from 'axios'
-import { ButtonStyle } from '../components/Button'
+import { ButtonStyle } from '../../app/styles/ButtonStyle'
 import dynamic from 'next/dynamic'
 import { LatLngLiteral } from 'leaflet'
-import { InputStyle } from '../styles/InputStyle'
-import { InputEvent } from '../types/events'
-import { Paths } from '../consts'
+import { InputStyle } from '../../app/styles/InputStyle'
+import { InputEvent } from '../../app/types/events'
+import { Paths } from '../../app/consts'
 import { FaCheck } from "react-icons/fa";
 
 const FormStyle = styled.div`
@@ -17,7 +17,7 @@ const FormStyle = styled.div`
   gap: 0.5rem;
 `
 
-const Map = dynamic(() => import('../components/Map'), {
+const Map = dynamic(() => import('../../app/components/Map'), {
   ssr: false,
 })
 
@@ -165,7 +165,11 @@ export default function LostPage() {
 }
 
 const SubmitSuccessPageContainer = styled.div`
-  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
 `
 
 function SubmitSuccessPage(
@@ -174,8 +178,11 @@ function SubmitSuccessPage(
 ) {
   return (
     <SubmitSuccessPageContainer>
-      <FaCheck />
-
+      <FaCheck 
+        size={150}
+        color={'#218f3c'}
+        className="mb-8"
+      />
       <h2>We will let you know as soon as someone finds {petName}! ❤️</h2>
     </SubmitSuccessPageContainer>
   )

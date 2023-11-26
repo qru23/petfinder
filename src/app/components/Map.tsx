@@ -3,7 +3,7 @@ import { DivIcon, Icon, LatLng, LatLngLiteral } from 'leaflet'
 import styled from 'styled-components'
 import 'leaflet/dist/leaflet.css';
 import { useCallback, useEffect, useState } from 'react';
-import { ButtonStyle } from './Button';
+import { ButtonStyle } from '../styles/ButtonStyle';
 
 const LocalRequestContainerStyle = styled.div`
   position: absolute;
