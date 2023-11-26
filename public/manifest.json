@@ -4,8 +4,8 @@
   "description": "AniMatch - Find your lost pets!",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#009688",
+  "background_color": "#FCEEE5",
+  "theme_color": "#FCEEE5",
   "icons": [
     {
       "src": "/logo1.png",
