@@ -8,4 +8,8 @@ export const ButtonStyle = styled.button`
   background: ${Color.accent};
   border: 2px solid ${Color.borders};
   color: #111;
+
+  &:disabled {
+    opacity: 0.7;
+  }
 `

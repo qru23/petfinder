@@ -43,8 +43,8 @@ export default function LostPage() {
   const [coords, setCoords] = useState<LatLngLiteral | undefined>(undefined)
   const [files, setFiles] = useState<File[]>([])
 
+  const [submitting, setSubmitting] = useState<boolean>(false)
   const [photoPreviews, setPhotoPreviews] = useState<string[]>([])
-
   const [submitSuccess, setSubmitSuccess] = useState<boolean>(false)
 
   const submitHandler = useCallback((e: FormEvent) => {
@@ -66,6 +66,8 @@ export default function LostPage() {
       files.forEach(f => formData.append('files', f))
 
       console.log('Submitting lost pet', petName)
+      setSubmitting(true)
+
       const { data } = await Axios.post(
         `${Paths.serverUrl}/lost/`,
         formData
@@ -76,6 +78,7 @@ export default function LostPage() {
         return
       }
 
+      setSubmitting(false)
       setSubmitSuccess(true)
     })();
   }, [petName, ownerName, phone, reward, coords, files])
@@ -158,7 +161,12 @@ export default function LostPage() {
           </PhotoPreviewsContainerStyle>
         }
 
-        <ButtonStyle onClick={submitHandler}>Submit</ButtonStyle>
+        <ButtonStyle
+          disabled={submitting}
+          onClick={submitHandler}
+        >
+          { submitting ? 'Submitting' : 'Submit' }
+        </ButtonStyle>
       </FormStyle>
     </main>
   ) 

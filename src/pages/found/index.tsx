@@ -34,6 +34,7 @@ export default function FoundPage() {
   const [email, setEmail] = useState<string>('')
 
   const [photoPreview, setPhotoPreview] = useState<string | undefined>('')
+  const [submittingLost, setSubmittingLost] = useState<boolean>(false)
 
   const [foundPets, setFoundPets] = useState<Pet[]>([])
   const [confirmedPet, setConfirmedPet] = useState<Pet | undefined>(undefined)
@@ -156,10 +157,11 @@ export default function FoundPage() {
           </PhotoPreviewContainerStyle>
         }
 
-        <ButtonStyle 
+        <ButtonStyle
+          disabled={submittingLost}
           onClick={submitHandler}
         >
-          Submit
+          { submittingLost ? 'Searching..' : 'Submit' }
         </ButtonStyle>
       </FormStyle>
     </main>
