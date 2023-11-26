@@ -64,12 +64,14 @@ export default function FoundPage() {
       formData.append('file', photo)
       formData.append('email', email)
 
+      setSubmittingFound(true)
+
       const { data } = await Axios.post(
         `${Paths.serverUrl}/found/`,
         formData
       )
-
       console.log('result', data)
+      setSubmittingFound(false)
       setFoundPets(data)
     })();
 
@@ -100,14 +102,12 @@ export default function FoundPage() {
       formData.append('email', email)
       formData.append('pet_id', pet.pet_id)
 
-      setSubmittingFound(true)
       const { data } = await Axios.post(
         `${Paths.serverUrl}/confirm_by_finder/`,
         formData
       )
 
       console.log('result', data)
-      setSubmittingFound(false)
       setConfirmedPet(pet)
     })()
   }, [name, phone, email, photo, setSubmittingFound])
