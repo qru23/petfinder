@@ -39,6 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>AniMatch</title>
         <link rel="icon" href="/logo1.png" />
+        <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"></meta>
       </Head>
       <>
         <MantineProvider theme={theme}>

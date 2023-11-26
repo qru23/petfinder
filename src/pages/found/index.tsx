@@ -34,7 +34,7 @@ export default function FoundPage() {
   const [email, setEmail] = useState<string>('')
 
   const [photoPreview, setPhotoPreview] = useState<string | undefined>('')
-  const [submittingLost, setSubmittingLost] = useState<boolean>(false)
+  const [submittingFound, setSubmittingFound] = useState<boolean>(false)
 
   const [foundPets, setFoundPets] = useState<Pet[]>([])
   const [confirmedPet, setConfirmedPet] = useState<Pet | undefined>(undefined)
@@ -91,12 +91,14 @@ export default function FoundPage() {
       formData.append('email', email)
       formData.append('pet_id', pet.pet_id)
 
+      setSubmittingFound(true)
       const { data } = await Axios.post(
         `${Paths.serverUrl}/confirm_by_finder/`,
         formData
       )
 
       console.log('result', data)
+      setSubmittingFound(false)
       setConfirmedPet(pet)
     })()
   }, [name, phone, email, photo])
@@ -158,10 +160,10 @@ export default function FoundPage() {
         }
 
         <ButtonStyle
-          disabled={submittingLost}
+          disabled={submittingFound}
           onClick={submitHandler}
         >
-          { submittingLost ? 'Searching..' : 'Submit' }
+          { submittingFound ? 'Searching..' : 'Submit' }
         </ButtonStyle>
       </FormStyle>
     </main>
