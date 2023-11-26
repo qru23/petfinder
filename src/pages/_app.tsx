@@ -39,7 +39,6 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <title>AniMatch</title>
         <link rel="icon" href="/logo1.png" />
-        <meta http-equiv="Content-Security-Policy" content="default-src * data: blob: filesystem: about: ws: wss: 'unsafe-inline' 'unsafe-eval'; script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; connect-src * data: blob: 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src * data: blob: ; style-src * data: blob: 'unsafe-inline'; font-src * data: blob: 'unsafe-inline'; frame-ancestors * data: blob:;"></meta>
       </Head>
       <>
         <MantineProvider theme={theme}>

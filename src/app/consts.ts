@@ -5,6 +5,6 @@ export const Color = {
 }
 
 export const Paths = {
-  serverUrl: 'http://46.101.212.106:8888',
-  imageServerUrl: 'http://46.101.212.106:8999',
+  serverUrl: 'https://animatch.step-by-step.live',
+  imageServerUrl: 'http://46.101.212.106:8787',
 }
