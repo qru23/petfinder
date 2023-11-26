@@ -276,7 +276,7 @@ function FoundPetOption(
               className="overflow-hidden"
             >
               <CarouselImageStyle 
-                src={image.path}
+                src={`${Paths.imageServerUrl}${image.path}`}
               />
             </Carousel.Slide>
           ))
