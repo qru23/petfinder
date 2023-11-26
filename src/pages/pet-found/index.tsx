@@ -80,7 +80,7 @@ export default function PetFoundPage() {
       
       <PetImageContainer>
         <img 
-          src={`${Paths.imageServerUrl}${foundPet.image.replace('/root/animatch_images/', '/')}`}
+          src={`${foundPet.image.replace('/root/animatch_images/', '/')}`}
         />
       </PetImageContainer>
 

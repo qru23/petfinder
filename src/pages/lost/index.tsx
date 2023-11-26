@@ -14,7 +14,16 @@ import { FaCheck } from "react-icons/fa";
 const FormStyle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+`
+
+const SubmitButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  
+  button {
+    width: 200px;
+  }
 `
 
 const Map = dynamic(() => import('../../app/components/Map'), {
@@ -161,12 +170,15 @@ export default function LostPage() {
           </PhotoPreviewsContainerStyle>
         }
 
-        <ButtonStyle
-          disabled={submitting}
-          onClick={submitHandler}
-        >
-          { submitting ? 'Submitting' : 'Submit' }
-        </ButtonStyle>
+        <SubmitButtonContainer>
+          <ButtonStyle
+            disabled={submitting}
+            onClick={submitHandler}
+          >
+            { submitting ? 'Submitting' : 'Submit' }
+          </ButtonStyle>
+        </SubmitButtonContainer>
+
       </FormStyle>
     </main>
   ) 

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Color } from "../consts";
 
 export const ButtonStyle = styled.button`
-  border-radius: 0.4rem;
+  border-radius: 0.75rem;
   padding: 0.4rem 1rem;
   background: ${Color.accent};
   border: 2px solid ${Color.borders};

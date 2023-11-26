@@ -15,7 +15,16 @@ import { FaCheck } from 'react-icons/fa'
 const FormStyle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+`
+
+const SubmitButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+
+  button {
+    width: 200px;
+  }
 `
 
 const PhotoPreviewContainerStyle = styled.div`
@@ -101,7 +110,7 @@ export default function FoundPage() {
       setSubmittingFound(false)
       setConfirmedPet(pet)
     })()
-  }, [name, phone, email, photo])
+  }, [name, phone, email, photo, setSubmittingFound])
 
   if (confirmedPet !== undefined) {
     return (
@@ -119,6 +128,8 @@ export default function FoundPage() {
       />
     )
   }
+
+  console.log(submittingFound)
 
   return (
     <main>
@@ -159,12 +170,15 @@ export default function FoundPage() {
           </PhotoPreviewContainerStyle>
         }
 
-        <ButtonStyle
-          disabled={submittingFound}
-          onClick={submitHandler}
-        >
-          { submittingFound ? 'Searching..' : 'Submit' }
-        </ButtonStyle>
+        <SubmitButtonContainer>
+          <ButtonStyle
+            disabled={submittingFound}
+            onClick={submitHandler}
+          >
+            { submittingFound ? 'Searching..' : 'Submit' }
+          </ButtonStyle>
+        </SubmitButtonContainer>
+
       </FormStyle>
     </main>
   ) 
@@ -213,7 +227,7 @@ const FoundPetOptionContainer = styled.div`
   background: ${Color.borders};
   border-radius: 0.5rem;
   color: white;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   display: flex;
   flex-direction: column;
 `
@@ -229,7 +243,7 @@ const CarouselContainerStyle = styled.div`
 const CarouselImageStyle = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: top;
 `
 
@@ -253,6 +267,7 @@ function FoundPetOption(
       <CarouselContainerStyle>
         <Carousel
           loop={true}
+          draggable={true}
         >
         {
           pet.images.map(image => (

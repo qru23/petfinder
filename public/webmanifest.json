@@ -1,0 +1,16 @@
+{
+  "name": "AniMatch",
+  "short_name": "AniMatch",
+  "description": "AniMatch - Find your lost pets!",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#009688",
+  "icons": [
+    {
+      "src": "/logo1.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
